@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Каталог UI-елементів — Лабораторна робота</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF8;
+    --surface:#FFFFFF;
+    --ink:#14171F;
+    --ink-soft:#5B616E;
+    --line:#DEE1E7;
+    --accent:#2A5FF0;
+    --accent-soft:#E8EEFF;
+    --accent-ink:#193C9E;
+    --green:#0F8B6C;
+    --green-soft:#E3F5EF;
+    --danger:#D14343;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  code, .mono{
+    font-family:'JetBrains Mono', monospace;
+  }
+  a{color:var(--accent);}
+
+  /* ---------- layout ---------- */
+  .shell{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+  header.hero{
+    border-bottom:1px solid var(--line);
+    padding:56px 0 40px;
+  }
+  .hero-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--accent-ink);
+    background:var(--accent-soft);
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:6px;
+    margin-bottom:16px;
+  }
+  h1.title{
+    font-size:44px;
+    max-width:640px;
+    line-height:1.12;
+  }
+  .subtitle{
+    color:var(--ink-soft);
+    font-size:16px;
+    max-width:520px;
+    margin-top:14px;
+  }
+  .meta-box{
+    font-size:14px;
+    color:var(--ink-soft);
+    text-align:right;
+    min-width:200px;
+  }
+  .meta-box div{margin-bottom:4px;}
+  .meta-box strong{color:var(--ink);}
+
+  nav.toc{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:32px;
+  }
+  nav.toc a{
+    text-decoration:none;
+    color:var(--ink);
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:7px 12px 7px 8px;
+    border-radius:20px;
+    font-size:13.5px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  nav.toc a:hover{border-color:var(--accent); background:var(--accent-soft);}
+  nav.toc span.n{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:#fff;
+    background:var(--ink);
+    border-radius:50%;
+    width:18px;height:18px;
+    display:inline-flex;align-items:center;justify-content:center;
+  }
+
+  main{padding:48px 0 80px;}
+  section.item{
+    border-bottom:1px solid var(--line);
+    padding:44px 0;
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:40px;
+  }
+  section.item:last-child{border-bottom:none;}
+  .item-head .num{
+    font-family:'JetBrains Mono', monospace;
+    color:var(--accent);
+    font-size:14px;
+  }
+  .item-head h2{
+    font-size:24px;
+    margin-top:6px;
+  }
+  .item-head .en{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    display:block;
+    margin-top:4px;
+  }
+  .item-head p{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    margin-top:14px;
+  }
+  .item-head ul{
+    margin:14px 0 0;
+    padding-left:18px;
+    color:var(--ink-soft);
+    font-size:14px;
+  }
+  .item-head li{margin-bottom:6px;}
+
+  .demo{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px;
+  }
+  .demo-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    text-transform:none;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    display:block;
+  }
+  .row{margin-bottom:20px;}
+  .row:last-child{margin-bottom:0;}
+  .row-title{font-size:13.5px; font-weight:600; margin-bottom:10px; color:var(--ink);}
+  .field-group{display:flex; gap:20px; flex-wrap:wrap; align-items:center;}
+  .option{display:flex; align-items:center; gap:7px; font-size:14.5px;}
+  input[type=radio], input[type=checkbox]{
+    width:16px; height:16px; accent-color:var(--accent); cursor:pointer;
+  }
+
+  /* text inputs */
+  .text-field{display:flex; flex-direction:column; gap:6px; max-width:320px;}
+  .text-field label{font-size:13px; color:var(--ink-soft);}
+  .text-field input, .text-field textarea, select{
+    font-family:'Inter', sans-serif;
+    font-size:14.5px;
+    padding:9px 11px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:#fff;
+    color:var(--ink);
+  }
+  .text-field input:focus, .text-field textarea:focus, select:focus{
+    outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .text-field textarea{resize:vertical; min-height:56px; font-family:'Inter',sans-serif;}
+
+  /* tabs */
+  .tabs-bar{display:flex; gap:4px; border-bottom:1px solid var(--line); margin-bottom:16px;}
+  .tab-btn{
+    background:none; border:none; cursor:pointer;
+    font-family:'Inter', sans-serif; font-size:14px; color:var(--ink-soft);
+    padding:9px 14px; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active{color:var(--accent-ink); border-bottom-color:var(--accent); font-weight:600;}
+  .tab-panel{display:none; font-size:14.5px; color:var(--ink-soft);}
+  .tab-panel.active{display:block;}
+
+  /* buttons */
+  button.btn{
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:7px;
+    border:1px solid transparent;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--accent); color:#fff;}
+  .btn-secondary{background:#fff; color:var(--ink); border-color:var(--line);}
+  .btn-danger{background:#fff; color:var(--danger); border-color:#F0C9C9;}
+  .btn-primary:hover{background:var(--accent-ink);}
+  .btn-secondary:hover{border-color:var(--ink);}
+  .btn-danger:hover{background:#FCEEEE;}
+
+  /* labels */
+  .label-demo{display:flex; flex-direction:column; gap:10px; font-size:14px;}
+  .status-ok{color:var(--green); background:var(--green-soft); padding:6px 10px; border-radius:6px; width:fit-content; font-size:13.5px;}
+  .status-req{color:var(--danger); font-size:12.5px;}
+
+  /* links */
+  .link-demo a{display:block; font-size:14.5px; margin-bottom:8px; text-decoration:none; border-bottom:1px solid var(--accent-soft);}
+  .link-demo a:hover{border-bottom-color:var(--accent);}
+
+  /* tooltip */
+  .tooltip{
+    position:relative; display:inline-flex; align-items:center; gap:6px;
+    border-bottom:1px dashed var(--ink-soft); cursor:help; font-size:14.5px;
+  }
+  .tooltip .bubble{
+    position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(4px);
+    background:var(--ink); color:#fff; font-size:12.5px; padding:7px 10px; border-radius:6px;
+    white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s ease, transform .15s ease;
+  }
+  .tooltip .bubble::after{
+    content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:var(--ink);
+  }
+  .tooltip:hover .bubble{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* dropdown */
+  .dropdown-note{font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+
+  /* data grid */
+  table.grid{width:100%; border-collapse:collapse; font-size:14px;}
+  table.grid th{
+    text-align:left; font-family:'JetBrains Mono', monospace; font-weight:500;
+    font-size:12px; color:var(--ink-soft); border-bottom:1px solid var(--line);
+    padding:8px 10px; cursor:pointer; user-select:none;
+  }
+  table.grid th:hover{color:var(--accent-ink);}
+  table.grid th .arrow{font-size:10px; margin-left:4px; opacity:.6;}
+  table.grid td{padding:9px 10px; border-bottom:1px solid #EEEFF2;}
+  table.grid tr:last-child td{border-bottom:none;}
+  .grid-toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:12px; flex-wrap:wrap;}
+  .grid-toolbar input{max-width:220px;}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:28px 0;
+    font-size:13px;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+
+  @media (max-width:820px){
+    section.item{grid-template-columns:1fr;}
+    h1.title{font-size:32px;}
+    .hero-top{flex-direction:column;}
+    .meta-box{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="shell">
+    <div class="hero-top">
+      <div>
+        <span class="kicker">Лабораторна робота · UI Controls</span>
+        <h1 class="title">Каталог UI-елементів веб-інтерфейсу</h1>
+        <p class="subtitle">Десять базових елементів інтерфейсу — з поясненням призначення та робочим прикладом для кожного.</p>
+      </div>
+      <div class="meta-box">
+        <div><strong>Елементів:</strong> 10</div>
+        <div><strong>Формат:</strong> HTML / CSS / JS</div>
+        <div><strong>Стан прикладів:</strong> інтерактивні</div>
+      </div>
+    </div>
+
+    <nav class="toc">
+      <a href="#radiobutton"><span class="n">1</span>Radiobutton</a>
+      <a href="#checkbox"><span class="n">2</span>Checkbox</a>
+      <a href="#text-input"><span class="n">3</span>Text input</a>
+      <a href="#tabs"><span class="n">4</span>Tabs</a>
+      <a href="#button"><span class="n">5</span>Button</a>
+      <a href="#text-label"><span class="n">6</span>Text label</a>
+      <a href="#link"><span class="n">7</span>Link</a>
+      <a href="#tooltip"><span class="n">8</span>Tooltip</a>
+      <a href="#dropdown"><span class="n">9</span>Dropdown list</a>
+      <a href="#data-grid"><span class="n">10</span>Data grid</a>
+    </nav>
+  </div>
+</header>
+
+<main class="shell">
+
+  <!-- 1. RADIOBUTTON -->
+  <section class="item" id="radiobutton">
+    <div class="item-head">
+      <span class="num">01</span>
+      <h2>Перемикач<span class="en">radiobutton</span></h2>
+      <p>Дозволяє обрати лише один варіант із групи взаємовиключних опцій. Усі перемикачі однієї групи пов'язані між собою — вибір нового автоматично знімає попередній.</p>
+      <ul>
+        <li>Використовується, коли варіант може бути лише один</li>
+        <li>Усі варіанти групи видно одразу, без розкриття списку</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — рівень складності завдання</span>
+      <div class="field-group">
+        <label class="option"><input type="radio" name="level" checked> Легкий</label>
+        <label class="option"><input type="radio" name="level"> Середній</label>
+        <label class="option"><input type="radio" name="level"> Складний</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. CHECKBOX -->
+  <section class="item" id="checkbox">
+    <div class="item-head">
+      <span class="num">02</span>
+      <h2>Прапорець<span class="en">checkbox</span></h2>
+      <p>Дозволяє обрати кілька варіантів незалежно один від одного — кожен прапорець вмикається чи вимикається окремо, без впливу на сусідні.</p>
+      <ul>
+        <li>Підходить для множинного вибору (теги, налаштування)</li>
+        <li>Може використовуватись і як самостійний перемикач "так/ні"</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — технології у проєкті</span>
+      <div class="field-group">
+        <label class="option"><input type="checkbox" checked> Go</label>
+        <label class="option"><input type="checkbox"> PostgreSQL</label>
+        <label class="option"><input type="checkbox" checked> WebSocket</label>
+        <label class="option"><input type="checkbox"> Docker</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. TEXT INPUT -->
+  <section class="item" id="text-input">
+    <div class="item-head">
+      <span class="num">03</span>
+      <h2>Текстове поле<span class="en">text input</span></h2>
+      <p>Приймає та дозволяє редагувати текстові дані, введені користувачем: короткий рядок (input) або багаторядковий текст (textarea).</p>
+      <ul>
+        <li>Основа будь-якої форми — реєстрація, пошук, коментарі</li>
+        <li>Може мати плейсхолдер, валідацію та підказку</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — форма</span>
+      <div class="row" style="display:flex; gap:20px; flex-wrap:wrap;">
+        <div class="text-field">
+          <label for="ti-name">Ім'я</label>
+          <input id="ti-name" type="text" placeholder="Введіть ваше ім'я">
+        </div>
+        <div class="text-field">
+          <label for="ti-search">Пошук</label>
+          <input id="ti-search" type="search" placeholder="Пошук по сайту...">
+        </div>
+      </div>
+      <div class="row text-field" style="max-width:100%; margin-top:16px;">
+        <label for="ti-comment">Коментар</label>
+        <textarea id="ti-comment" placeholder="Напишіть повідомлення..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. TABS -->
+  <section class="item" id="tabs">
+    <div class="item-head">
+      <span class="num">04</span>
+      <h2>Вкладки<span class="en">tabs</span></h2>
+      <p>Організовують вміст у окремі розділи, між якими можна перемикатись, клацаючи на заголовки. Показують лише один розділ за раз, приховуючи інші.</p>
+      <ul>
+        <li>Зменшують візуальне перевантаження сторінки</li>
+        <li>Використовуються для пов'язаного, але роздільного контенту</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — розділи профілю</span>
+      <div class="tabs-bar">
+        <button class="tab-btn active" data-tab="t1">Профіль</button>
+        <button class="tab-btn" data-tab="t2">Налаштування</button>
+        <button class="tab-btn" data-tab="t3">Безпека</button>
+      </div>
+      <div class="tab-panel active" id="t1">Особисті дані користувача: ім'я, аватар, короткий опис.</div>
+      <div class="tab-panel" id="t2">Мова інтерфейсу, тема оформлення, сповіщення.</div>
+      <div class="tab-panel" id="t3">Зміна пароля, двофакторна автентифікація, активні сесії.</div>
+    </div>
+  </section>
+
+  <!-- 5. BUTTON -->
+  <section class="item" id="button">
+    <div class="item-head">
+      <span class="num">05</span>
+      <h2>Кнопка<span class="en">button</span></h2>
+      <p>Запускає дію після натискання: відправку форми, збереження, видалення. Стиль кнопки зазвичай відображає важливість або наслідки дії.</p>
+      <ul>
+        <li>Primary — головна дія на екрані</li>
+        <li>Secondary — допоміжна дія, danger — незворотна/ризикована дія</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — дії форми</span>
+      <div class="field-group">
+        <button class="btn btn-primary">Зберегти</button>
+        <button class="btn btn-secondary">Скасувати</button>
+        <button class="btn btn-danger">Видалити</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. TEXT LABEL -->
+  <section class="item" id="text-label">
+    <div class="item-head">
+      <span class="num">06</span>
+      <h2>Текстова мітка<span class="en">text label</span></h2>
+      <p>Статичний текст, що описує поле, дає інструкцію або показує стан системи. На відміну від інших елементів, з міткою не можна взаємодіяти.</p>
+      <ul>
+        <li>Підвищує доступність — пояснює призначення поля</li>
+        <li>Використовується для статусів: помилка, успіх, обов'язковість</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — підписи та статуси</span>
+      <div class="label-demo">
+        <div>Електронна пошта <span class="status-req">* обов'язкове поле</span></div>
+        <div class="status-ok">Дані успішно збережено</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. LINK -->
+  <section class="item" id="link">
+    <div class="item-head">
+      <span class="num">07</span>
+      <h2>Посилання<span class="en">link</span></h2>
+      <p>Переносить користувача на іншу сторінку, розділ сайту або зовнішній ресурс. Візуально виділяється кольором та підкресленням, щоб бути впізнаваним.</p>
+      <ul>
+        <li>Внутрішні посилання — навігація в межах сайту</li>
+        <li>Зовнішні посилання зазвичай відкриваються в новій вкладці</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад</span>
+      <div class="link-demo">
+        <a href="#radiobutton">Перейти до розділу "Radiobutton" (внутрішнє)</a>
+        <a href="https://developer.mozilla.org" target="_blank" rel="noopener">Документація MDN (зовнішнє, нова вкладка)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. TOOLTIP -->
+  <section class="item" id="tooltip">
+    <div class="item-head">
+      <span class="num">08</span>
+      <h2>Підказка<span class="en">tooltip</span></h2>
+      <p>З'являється при наведенні курсора на елемент і показує коротку додаткову інформацію, не займаючи постійного місця на екрані.</p>
+      <ul>
+        <li>Використовується для пояснення іконок або скорочених назв</li>
+        <li>Не повинна містити критично важливу інформацію — лише допоміжну</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — наведіть курсор</span>
+      <div class="field-group">
+        <span class="tooltip">API-ключ
+          <span class="bubble">Унікальний токен для доступу до сервера</span>
+        </span>
+        <span class="tooltip">Статус
+          <span class="bubble">Синхронізовано 2 хв тому</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. DROPDOWN -->
+  <section class="item" id="dropdown">
+    <div class="item-head">
+      <span class="num">09</span>
+      <h2>Випадний список<span class="en">dropdown list</span></h2>
+      <p>Дозволяє обрати один варіант зі списку, який за замовчуванням згорнутий і розкривається лише при кліку — економить місце порівняно з набором radiobutton.</p>
+      <ul>
+        <li>Зручний, коли варіантів багато (країни, категорії)</li>
+        <li>Може підтримувати пошук або множинний вибір</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — параметри запиту</span>
+      <div class="field-group">
+        <div class="text-field">
+          <label for="dd-country">Країна</label>
+          <select id="dd-country">
+            <option>Україна</option>
+            <option>Польща</option>
+            <option>Німеччина</option>
+          </select>
+        </div>
+        <div class="text-field">
+          <label for="dd-sort">Сортування</label>
+          <select id="dd-sort">
+            <option>За новизною</option>
+            <option>За назвою</option>
+            <option>За розміром</option>
+          </select>
+        </div>
+      </div>
+      <div class="dropdown-note">Клік по полю розгортає список опцій; клавіші ↑ ↓ дозволяють гортати варіанти.</div>
+    </div>
+  </section>
+
+  <!-- 10. DATA GRID -->
+  <section class="item" id="data-grid">
+    <div class="item-head">
+      <span class="num">10</span>
+      <h2>Таблиця даних<span class="en">data grid</span></h2>
+      <p>Показує табличні дані рядками та стовпцями з можливістю сортування, фільтрації та (опційно) редагування прямо в клітинках.</p>
+      <ul>
+        <li>Використовується в адмін-панелях, звітах, списках записів</li>
+        <li>Часто доповнюється пошуком та пагінацією</li>
+      </ul>
+    </div>
+    <div class="demo">
+      <span class="demo-label">Приклад — клік по заголовку сортує стовпець</span>
+      <div class="grid-toolbar">
+        <input id="grid-filter" type="text" placeholder="Фільтр за словом..." class="mono" style="font-family:'Inter',sans-serif;">
+      </div>
+      <table class="grid" id="grid">
+        <thead>
+          <tr>
+            <th data-key="word" data-type="text">Слово<span class="arrow"></span></th>
+            <th data-key="theme" data-type="text">Тема<span class="arrow"></span></th>
+            <th data-key="length" data-type="num">Довжина<span class="arrow"></span></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Лабораторна робота · UI Controls Catalog
+</footer>
+
+<script>
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const bar = btn.closest('.demo');
+      bar.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      bar.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      bar.querySelector('#'+btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Data grid
+  const gridData = [
+    {word:'АЛГОРИТМ', theme:'Інформатика', length:9},
+    {word:'ВЕКТОР', theme:'Математика', length:6},
+    {word:'СЕРВЕР', theme:'Інформатика', length:6},
+    {word:'ФУНКЦІЯ', theme:'Математика', length:7},
+    {word:'МАСИВ', theme:'Інформатика', length:5},
+    {word:'ІНТЕГРАЛ', theme:'Математика', length:8},
+  ];
+  let sortState = {key:null, dir:1};
+
+  function renderGrid(rows){
+    const tbody = document.querySelector('#grid tbody');
+    tbody.innerHTML = rows.map(r=>
+      `<tr><td>${r.word}</td><td>${r.theme}</td><td>${r.length}</td></tr>`
+    ).join('');
+  }
+
+  function applyFilter(){
+    const q = document.getElementById('grid-filter').value.trim().toLowerCase();
+    let rows = gridData.filter(r =>
+      r.word.toLowerCase().includes(q) || r.theme.toLowerCase().includes(q)
+    );
+    if(sortState.key){
+      rows = rows.slice().sort((a,b)=>{
+        const va = a[sortState.key], vb = b[sortState.key];
+        if(typeof va === 'number') return (va-vb)*sortState.dir;
+        return String(va).localeCompare(String(vb)) * sortState.dir;
+      });
+    }
+    renderGrid(rows);
+  }
+
+  document.querySelectorAll('#grid th').forEach(th=>{
+    th.addEventListener('click', ()=>{
+      const key = th.dataset.key;
+      sortState.dir = (sortState.key === key) ? sortState.dir * -1 : 1;
+      sortState.key = key;
+      document.querySelectorAll('#grid th .arrow').forEach(a=>a.textContent='');
+      th.querySelector('.arrow').textContent = sortState.dir === 1 ? '▲' : '▼';
+      applyFilter();
+    });
+  });
+  document.getElementById('grid-filter').addEventListener('input', applyFilter);
+
+  applyFilter();
+</script>
+
+</body>
+</html>
